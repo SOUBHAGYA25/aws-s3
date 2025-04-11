@@ -1,0 +1,53 @@
+roject Name:
+"S3 Event Tracker with Real-Time Notifications"
+
+Project Objective:
+Capture every upload, delete, and overwrite action on an S3 bucket, and send real-time notifications via email using AWS SNS.
+
+Architecture Overview:
+User Uploads/Deletes/Overwrites ➜ S3 Bucket ➜ Triggers Lambda ➜ Sends SNS Email Notification
+
+Required AWS Services:
+S3 – to store files and generate events
+SNS – to send email notifications
+Lambda – to process S3 events and send notifications
+IAM – to grant necessary permissions
+
+Step-by-Step Configuration:
+1. Create an S3 Bucket
+Name it like: s3-event-monitor-saubhagya
+Enable versioning (to detect overwrite)
+Enable server access logging (optional for advanced analysis)
+
+2. Create an SNS Topic
+Name it: s3-event-notify
+Add email subscription (your email)
+Confirm the email from your inbox
+
+3. Create IAM Role for Lambda
+Allow permissions:
+s3:GetObject, s3:PutObject, s3:DeleteObject
+sns:Publish
+logs:*
+Trust policy for Lambda service
+
+4. Create Lambda Function
+Runtime: Python 3.12 or Node.js 18
+Trigger: S3 Event Notification
+Events:
+s3:ObjectCreated:*
+s3:ObjectRemoved:*
+Add environment variable:
+SNS_TOPIC_ARN=your-sns-topic-arn
+
+#5. Lambda Function Code (Python)
+
+6. Connect S3 to Lambda
+Go to your bucket → Properties → Event notifications → Add
+Choose:
+Event types: PUT, POST, DELETE
+Destination: Lambda function
+
+7. Test It Out
+Upload, delete, or overwrite a file in the S3 bucket.
+Check your email — you’ll get instant notifications!
