@@ -1,0 +1,22 @@
+import boto3
+import os
+
+sns = boto3.client('sns')
+
+def lambda_handler(event, context):
+    records = event['Records']
+    for record in records:
+        event_name = record['eventName']
+        bucket = record['s3']['bucket']['name']
+        key = record['s3']['object']['key']
+        size = record['s3']['object'].get('size', 'N/A')
+
+        message = f"Event: {event_name}\nBucket: {bucket}\nKey: {key}\nSize: {size}"
+        print(message)
+
+        sns.publish(
+            TopicArn=os.environ['SNS_TOPIC_ARN'],
+            Subject=f"S3 Event - {event_name}",
+            Message=message
+        )
+    return {"status": "Notification sent"}
